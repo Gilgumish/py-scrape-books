@@ -47,13 +47,7 @@ class BooksSpider(scrapy.Spider):
 
     @staticmethod
     def _parse_amount(response: Response) -> int:
-        stock_text = response.css("p.instock.availability::text").getall()
-        stock_text = [s.strip() for s in stock_text if s.strip()]
-        if stock_text and len(stock_text[0].split()) > 2:
-            stock_amount = stock_text[0].split()[2]
-            if stock_amount.isdigit():
-                return int(stock_amount)
-        return 0
+        return response.css("p.availability::text").re_first("\d+")
 
     @staticmethod
     def _parse_rating(response: Response) -> int:
